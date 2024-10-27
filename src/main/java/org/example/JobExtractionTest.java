@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class JobExtractionTest {
     public  void start(){
@@ -19,17 +20,27 @@ public class JobExtractionTest {
 
         try {
             // Navigate to the Indeed job search results page
-            String baseURL = "https://ro.indeed.com/jobs?q=&l=Romania";
+            String baseURL = "https://ro.indeed.com/jobs?q=&l=Romania&from=searchOnHP&vjk=eab90bbb32dee1d2&advn=7558139012226704";
             driver.get(baseURL);
 
             // Create a wait object to ensure the page and elements are fully loaded before interactions
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
+            WebElement cookiePopup = driver.findElement(By.id("onetrust-accept-btn-handler"));
+
+            if (cookiePopup.isDisplayed()) {
+                cookiePopup.click();
+            }
+
+
+
             // Wait until job postings are visible on the page
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".job_seen_beacon")));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobTitle")));
 
             // Find all job listings on the page
-            List<WebElement> jobListings = driver.findElements(By.className("jobTitle"));
+            List<WebElement> jobListings = driver.findElements(By.xpath("//h2[contains(@class, 'jobTitle')]"));
 
             // Loop through each job listing and click it to load the job description in the right panel
             for (WebElement job : jobListings) {
