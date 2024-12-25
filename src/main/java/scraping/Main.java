@@ -18,15 +18,16 @@ public class Main {
 
         try{
 
-            // Function that initialize the table
-            // db.createJobsTable();
-            // db.clearJobTable();
+            // Connection to our database
+
+
             // Class that scrapes
-            browser.scrapeBestJobs(2);
-            // Function that process data from the web scraper class
-            // db.processDatabaseChanges(browser.jobCollection);
-            //browser.scrapeBestJobs();
-            //browser.scrapeIndeedJobs("Iasi");
+//            browser.scrapeBestJobs(10);
+            browser.scrapeEJobs(10);
+//            db.processDatabaseChanges(browser.jobCollection);
+
+//            browser.scrapeEJobs(2);
+//            db.processDatabaseChanges(browser.jobCollection);
 
         }catch(Exception e){}
 

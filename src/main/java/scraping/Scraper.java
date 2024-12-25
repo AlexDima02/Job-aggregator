@@ -63,91 +63,195 @@ public class Scraper {
 
     }
 
-    public void scrapeIndeedJobs(String location) {
+//    public void scrapeIndeedJobs(String location) {
+//
+//        //  Job-card: #mosaic-provider-jobcards
+//        //  Job title: ".jcs-JobTitle"
+//        //  Job link: ".jcs-JobTitle"[href]
+//        //  Job location: "text-location"[data-testid]
+//        //  Job company: "company-name"[data-testid]
+//        int pages = 1;
+//        ChromeOptions settings = new ChromeOptions();
+//        settings.addArguments("--headless=new");
+//        WebDriver driver = new ChromeDriver();
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//        driver.get("https://ro.indeed.com/jobs?q=&l="+location);
+//
+//        try {
+//            // Close cookie popup if present
+//            try {
+//                WebElement cookiePopup = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button#onetrust-accept-btn-handler")));
+//                if (cookiePopup.isDisplayed()) {
+//                    cookiePopup.click();
+//                }
+//            } catch (TimeoutException e) {
+//                System.out.println("Cookie popup not found or already closed.");
+//            }
+//
+//            while (pages < 10) {
+//                System.out.println("Scraping page " + pages);
+//
+//
+//                // Wait until job postings are visible on the page
+//                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobTitle")));
+//
+//
+//                // Find all job listings on the page
+//                List<WebElement> jobListings = driver.findElements(By.cssSelector("h2.jobTitle"));
+//
+//                // Extract details from each job listing
+//                for (WebElement job : jobListings) {
+//                    System.out.println("Scraping page " + pages);
+//                    try{
+//                        job.click();
+//                        Thread.sleep(4500);
+//                    }catch (Exception e) {}
+//
+//
+//
+//                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobsearch-JobInfoHeader-title span"))).isDisplayed()){
+//                        System.out.println(" ");
+//                        // Extract the job info from the right-side panel or left panel
+//                        System.out.println("Job Title: ");
+//                        WebElement jobTitle = driver.findElement(By.cssSelector("h2.jobsearch-JobInfoHeader-title span"));
+//                        System.out.println(jobTitle.getText());
+//                    }
+//
+//
+//                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span.css-1saizt3 a"))).isDisplayed()){
+//                        System.out.println(" ");
+//                        System.out.println("Job Company: ");
+//                        WebElement jobCompany = driver.findElement(By.cssSelector("span.css-1saizt3 a"));
+//                        System.out.println(jobCompany.getText());
+//                    }
+//
+//
+//                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobTitle a"))).isDisplayed()){
+//                        System.out.println(" ");
+//                        System.out.println("Job Link: ");
+//                        WebElement jobLink = job.findElement(By.cssSelector("h2.jobTitle a"));
+//                        System.out.println(jobLink.getAttribute("href"));
+//                    }
+//
+//
+//                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div#jobLocationText span"))).isDisplayed()){
+//                        System.out.println(" ");
+//                        System.out.println("Job Location: ");
+//                        WebElement jobLocation = driver.findElement(By.cssSelector("div#jobLocationText span"));
+//                        System.out.println(jobLocation.getText());
+//                    }
+//
+//
+//
+//                }
+//
+//                // Check for and click the "Next" button, if it exists
+//                try {
+//                    WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='jobsearch-JapanPage']/div/div[5]/div/div[1]/nav/ul/li[6]/a")));
+//                    if (nextButton != null && nextButton.isDisplayed()) {
+//                        nextButton.click();
+//                        pages++; // Increment page count
+//                        Thread.sleep(2000);  // Wait for the next page to load
+//                    } else {
+//                        break; // No "Next" button found, exit the loop
+//                    }
+//                } catch (TimeoutException e) {
+//                    System.out.println("No more pages to scrape.");
+//                    break; // Exit the loop if there's no "Next" button
+//                }
+//
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            // Close the driver after scraping
+////            driver.quit();
+//        }
+//
+//
+//    }
 
-        //  Job-card: #mosaic-provider-jobcards
-        //  Job title: ".jcs-JobTitle"
-        //  Job link: ".jcs-JobTitle"[href]
-        //  Job location: "text-location"[data-testid]
-        //  Job company: "company-name"[data-testid]
+    public void scrapeIndeedJobsTest(int options){
+
+
         int pages = 1;
         ChromeOptions settings = new ChromeOptions();
-        settings.addArguments("--headless=new");
-        WebDriver driver = new ChromeDriver();
+//        settings.addArguments("--headless=new");
+        settings.addArguments("--user-agent="+FakeUa.generateWindowsChromeUa());
+        WebDriver driver = new ChromeDriver(settings);
+//        driver.get("https://www.ejobs.ro/locuri-de-munca/sort-publish/");
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        driver.get("https://ro.indeed.com/jobs?q=&l="+location);
+
 
         try {
-            // Close cookie popup if present
-            try {
-                WebElement cookiePopup = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button#onetrust-accept-btn-handler")));
-                if (cookiePopup.isDisplayed()) {
-                    cookiePopup.click();
-                }
-            } catch (TimeoutException e) {
-                System.out.println("Cookie popup not found or already closed.");
-            }
 
-            while (pages < 10) {
+            while (pages < options) {
+
                 System.out.println("Scraping page " + pages);
+                driver.get("https://ro.indeed.com/jobs?q=&l=Brasov&start="+pages*10);
+
+                // Close cookie popup if present
+                try {
+                    WebElement cookiePopup = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button#onetrust-accept-btn-handler")));
+                    if (cookiePopup.isDisplayed()) {
+                        cookiePopup.click();
+                    }
+                } catch (TimeoutException e) {
+                    System.out.println("Cookie popup not found or already closed.");
+                }
 
 
-                // Wait until job postings are visible on the page
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobTitle")));
+
+                utilityScroll(driver);
+
+                WebElement nextBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"jobsearch-JapanPage\"]/div/div[5]/div/div[1]/nav/ul/li[6]/a")));
 
 
                 // Find all job listings on the page
-                List<WebElement> jobListings = driver.findElements(By.cssSelector("h2.jobTitle"));
+                List<WebElement> jobs = driver.findElements(By.cssSelector("#mosaic-provider-jobcards ul li h2 a"));
+
+                for (int i = 0; i < jobs.size(); i++) {
+                    jobLinks.add(jobs.get(i).getAttribute("href"));
+                }
+
+                System.out.println(jobLinks.size());
 
                 // Extract details from each job listing
-                for (WebElement job : jobListings) {
-                    System.out.println("Scraping page " + pages);
-                    try{
-                        job.click();
-                        Thread.sleep(4500);
-                    }catch (Exception e) {}
+                for (int i = 0; i <= jobLinks.size(); i++) {
+                    try {
+
+                        Thread.sleep(500);
+
+                        // Navigate to the link
+                        driver.get(jobLinks.get(i));
 
 
+//                        // Get info from the current page
+                        WebElement jobName = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='viewJobSSRRoot']/div[2]/div[3]/div/div/div[1]/div[3]/div[1]/div[1]/h1/span")));
+                        WebElement jobCompany = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='viewJobSSRRoot']/div[2]/div[3]/div/div/div[1]/div[3]/div[1]/div[2]/div/div/div/div[1]/div[1]/span/a")));
+                        WebElement jobLocation = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='viewJobSSRRoot']/div[2]/div[3]/div/div/div[1]/div[3]/div[1]/div[2]/div/div/div/div[2]/div")));
+                        String jobLink = jobLinks.get(i);
 
-                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobsearch-JobInfoHeader-title span"))).isDisplayed()){
-                        System.out.println(" ");
-                        // Extract the job info from the right-side panel or left panel
-                        System.out.println("Job Title: ");
-                        WebElement jobTitle = driver.findElement(By.cssSelector("h2.jobsearch-JobInfoHeader-title span"));
-                        System.out.println(jobTitle.getText());
-                    }
+                        System.out.println("Title of " + jobLinks.get(i) + ": " + jobName.getText());
+                        System.out.println("Company of " + jobLinks.get(i) + ": " + jobCompany.getText());
+                        System.out.println("Location of " + jobLinks.get(i) + ": " + jobLocation.getText());
+                        System.out.println("Link of " + jobLinks.get(i) + ": " + jobLink);
 
+//                        jobCollection.add(new jobCard(jobName.getText(), jobCompany.getText(), jobLocation.getText(), jobLink));
 
-                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span.css-1saizt3 a"))).isDisplayed()){
-                        System.out.println(" ");
-                        System.out.println("Job Company: ");
-                        WebElement jobCompany = driver.findElement(By.cssSelector("span.css-1saizt3 a"));
-                        System.out.println(jobCompany.getText());
-                    }
-
-
-                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h2.jobTitle a"))).isDisplayed()){
-                        System.out.println(" ");
-                        System.out.println("Job Link: ");
-                        WebElement jobLink = job.findElement(By.cssSelector("h2.jobTitle a"));
-                        System.out.println(jobLink.getAttribute("href"));
-                    }
-
-
-                    if(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div#jobLocationText span"))).isDisplayed()){
-                        System.out.println(" ");
-                        System.out.println("Job Location: ");
-                        WebElement jobLocation = driver.findElement(By.cssSelector("div#jobLocationText span"));
-                        System.out.println(jobLocation.getText());
-                    }
-
-
+                    } catch (Exception e) {}
 
                 }
 
+                driver.get("https://ro.indeed.com/jobs?q=&l=Brasov&start="+pages*10);
+                jobLinks.clear();
+                utilityScroll(driver);
+
                 // Check for and click the "Next" button, if it exists
                 try {
-                    WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='jobsearch-JapanPage']/div/div[5]/div/div[1]/nav/ul/li[6]/a")));
+                    WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"jobsearch-JapanPage\"]/div/div[5]/div/div[1]/nav/ul/li[6]/a")));
                     if (nextButton != null && nextButton.isDisplayed()) {
                         nextButton.click();
                         pages++; // Increment page count
@@ -166,12 +270,9 @@ public class Scraper {
             e.printStackTrace();
         } finally {
             // Close the driver after scraping
-//            driver.quit();
+            driver.quit();
         }
-
-
     }
-
 
     // Scrape a custom number of pages
     public void scrapeEJobs(int options){
@@ -184,7 +285,7 @@ public class Scraper {
         WebDriver driver = new ChromeDriver();
 //        driver.get("https://www.ejobs.ro/locuri-de-munca/sort-publish/");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(25));
 
 
         try {
@@ -220,10 +321,10 @@ public class Scraper {
                 System.out.println(jobLinks.size());
 
                 // Extract details from each job listing
-                for (int i = 0; i < jobLinks.size(); i++) {
+                for (int i = 0; i <= jobLinks.size(); i++) {
                             try {
 
-                                Thread.sleep(500);
+                                Thread.sleep(1000);
 
                                 // Navigate to the link
                                 driver.get(jobLinks.get(i));
@@ -254,7 +355,7 @@ public class Scraper {
                 try {
                     WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"__nuxt\"]/div/div[4]/div[1]/div/div[2]/div[3]/a")));
                     if (nextButton != null && nextButton.isDisplayed()) {
-                        nextButton.click();
+                        driver.get(nextButton.getAttribute("href"));
                         pages++; // Increment page count
                         Thread.sleep(2000);  // Wait for the next page to load
                     } else {
@@ -280,7 +381,7 @@ public class Scraper {
         ChromeOptions settings = new ChromeOptions();
         settings.addArguments("--headless=new");
         settings.addArguments("--user-agent="+FakeUa.generateWindowsChromeUa());
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(settings);
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));

@@ -29,14 +29,16 @@ public class DatabaseAdmin {
 
     public void processDatabaseChanges(ArrayList<jobCard> jobs) throws SQLException {
 
-        String url = "jdbc:sqlite:src/main/java/database/test.db";
-        Connection conn = DriverManager.getConnection(url);
+        try {
 
-        try{
+            String url = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres?user=postgres.npwvjtzjdlqntviahmvq&password=y2jVFtwoz2mytgvg";
+            Connection conn = DriverManager.getConnection(url);
+
             if (conn != null) {
+
                 for (jobCard job : jobs) {
 
-                    String checkQuery = "SELECT COUNT(*) FROM job_table WHERE title = ? AND company = ? AND location = ? AND link = ?";
+                    String checkQuery = "SELECT COUNT(*) FROM jobs WHERE job_title = ? AND job_company = ? AND job_location = ? AND job_link = ?";
 
                     try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
                         checkStmt.setString(1, job.getTitle());
@@ -50,7 +52,7 @@ public class DatabaseAdmin {
                             System.out.println("Duplicate found: " + job.getTitle() + " (" + job.getCompany() + ")");
                         } else {
                             System.out.println("No duplicate for: " + job.getTitle() + " (" + job.getCompany() + ")");
-                            String insertQuery = "INSERT INTO job_table (title, company, location, link) VALUES (?, ?, ?, ?)";
+                            String insertQuery = "INSERT INTO jobs (job_title, job_company, job_location, job_link) VALUES (?, ?, ?, ?)";
                             try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
                                 insertStmt.setString(1, job.getTitle());
                                 insertStmt.setString(2, job.getCompany());
@@ -60,35 +62,16 @@ public class DatabaseAdmin {
                                 System.out.println("Data inserted successfully.");
                             }
                         }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
 
                 }
+
             }
 
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-
-
-    }
-
-    public void clearJobTable() throws SQLException {
-
-        String url = "jdbc:sqlite:src/main/java/database/test.db";
-        Connection conn = DriverManager.getConnection(url);
-
-        String deleteJobTable = """
-                DELETE FROM `job_table`;
-                DELETE FROM sqlite_sequence where name='job_table';
-        """;
-
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(deleteJobTable);
         } catch (SQLException e) {
-            e.printStackTrace();
+           e.printStackTrace();
         }
-
     }
 }

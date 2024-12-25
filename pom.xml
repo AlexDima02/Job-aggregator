@@ -32,6 +32,20 @@
             <version>4.23.1</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+            <version>4.23.1</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -44,6 +58,7 @@
             <artifactId>fake-useragent</artifactId>
             <version>1.0.0</version>
         </dependency>
+
 
         <dependency>
             <groupId>io.github.knife-fish</groupId>
