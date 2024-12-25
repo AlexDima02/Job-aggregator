@@ -6,11 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Main {
-
-
-
-
-
+    
     public static void main(String[] args) {
 
         Scraper browser = new Scraper();
@@ -22,14 +18,18 @@ public class Main {
 
 
             // Class that scrapes
-//            browser.scrapeBestJobs(10);
+            browser.scrapeBestJobs(10);
+            db.processDatabaseChanges(browser.jobCollection);
+
             browser.scrapeEJobs(10);
-//            db.processDatabaseChanges(browser.jobCollection);
+            db.processDatabaseChanges(browser.jobCollection);
 
 //            browser.scrapeEJobs(2);
 //            db.processDatabaseChanges(browser.jobCollection);
 
-        }catch(Exception e){}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
 
 
